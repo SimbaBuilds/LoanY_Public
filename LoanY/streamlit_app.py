@@ -60,7 +60,7 @@ def get_completion_from_messages(messages, model=llm_model, temperature=0.7):
 # """} ]
 
 st.title("LoanY: A loan officer aide streamlining the loan search process")
-description = "Please answer the following questions as accurately and honestly as possible.  Your information will not be shared with external parties."
+description = "Your information will not be shared with external parties."
 st.write(f":green[{description}]")
 
 # if 'context' not in st.session_state:
@@ -87,8 +87,6 @@ if 'assistant' not in st.session_state:
 
 
 
-
-
 prompt = st.chat_input("Interact with LoanY here.  You can start by saying hello.")
 
 
@@ -111,22 +109,22 @@ if prompt:
         # print(f"Run status: {run_status.status}")
         if run_status.status == 'completed':
             break
-    #     elif run_status.status == 'requires_action':
-    #     # Handle the function call
-    #      for tool_call in run_status.required_action.submit_tool_outputs.tool_calls:
-    #         if tool_call.function.name == "send_email_to_loan_officer":
-    #         # Process solar panel calculations
-    #             arguments = json.loads(tool_call.function.arguments)
-    #             output = functions.solar_panel_calculations(
-    #                 arguments["address"], arguments["monthly_bill"])
-    #             st.session_state.client.beta.threads.runs.submit_tool_outputs(thread_id=st.session_state.thread_id,
-    #                                                         run_id=run.id,
-    #                                                         tool_outputs=[{
-    #                                                             "tool_call_id":
-    #                                                             tool_call.id,
-    #                                                             "output":
-    #                                                             json.dumps(output)
-    #                                                         }])
+        elif run_status.status == 'requires_action':
+        # Handle the function call
+         for tool_call in run_status.required_action.submit_tool_outputs.tool_calls:
+            if tool_call.function.name == "gmail_send_message":
+            # Process solar panel calculations
+                arguments = json.loads(tool_call.function.arguments)
+                output = functions.gmail_send_message(
+                    arguments["client_name"], arguments["summary"])
+                st.session_state.client.beta.threads.runs.submit_tool_outputs(thread_id=st.session_state.thread_id,
+                                                            run_id=run.id,
+                                                            tool_outputs=[{
+                                                                "tool_call_id":
+                                                                tool_call.id,
+                                                                "output":
+                                                                json.dumps(output)
+                                                            }])
             # elif tool_call.function.name == "create_lead":
             # # Process lead creation
             #     arguments = json.loads(tool_call.function.arguments)
@@ -158,7 +156,7 @@ if prompt:
 
 st.write(st.session_state.history)
 
-# streamlit run app.py
+# streamlit run streamlit_app.py
 
 
 
