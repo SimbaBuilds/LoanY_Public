@@ -28,8 +28,8 @@ config = toml.load('/Users/cameronhightower/Documents/LoanY/.streamlit/config.to
 openai.api_key = config['openai']['api_key']
 OPENAI_API_KEY = openai.api_key
 
-# llm_model = "gpt-3.5-turbo-0301"
-llm_model = "gpt-4-1106-preview"
+llm_model = "gpt-3.5-turbo-1106"
+# llm_model = "gpt-4-1106-preview"
 
 # from dotenv import load_dotenv, find_dotenv
 # _ = load_dotenv(find_dotenv()) # read local .env file
@@ -60,8 +60,9 @@ def get_completion_from_messages(messages, model=llm_model, temperature=0.7):
 # """} ]
 
 st.title("LoanY: A loan officer aide streamlining the loan search process")
-description = "Your information will not be shared with external parties."
-st.write(f":green[{description}]")
+description = """A summary of this conversation will be sent to your loan officer.
+                \nYour information will not be shared with external parties."""
+st.write(description)
 
 # if 'context' not in st.session_state:
 #     st.session_state.context = context
@@ -86,9 +87,7 @@ if 'assistant' not in st.session_state:
     st.session_state.client)  # this function comes from "functions.py"
 
 
-
 prompt = st.chat_input("Interact with LoanY here.  You can start by saying hello.")
-
 
 if prompt:
     st.session_state.history += prompt
@@ -106,14 +105,14 @@ if prompt:
     while True:
         run_status = st.session_state.client.beta.threads.runs.retrieve(thread_id=st.session_state.thread_id,
                                                     run_id=run.id)
-        # print(f"Run status: {run_status.status}")
+        print(f"Run status: {run_status.status}")
         if run_status.status == 'completed':
             break
         elif run_status.status == 'requires_action':
         # Handle the function call
          for tool_call in run_status.required_action.submit_tool_outputs.tool_calls:
             if tool_call.function.name == "gmail_send_message":
-            # Process solar panel calculations
+                print("Send email function identified as action.")
                 arguments = json.loads(tool_call.function.arguments)
                 output = functions.gmail_send_message(
                     arguments["client_name"], arguments["summary"])
@@ -138,7 +137,7 @@ if prompt:
             #                                                     "output":
             #                                                     json.dumps(output)
             #                                                 }])
-        # time.sleep(1)  # Wait for a second before checking again
+        time.sleep(1)  # Wait for a second before checking again
     
     
     messages = st.session_state.client.beta.threads.messages.list(thread_id=st.session_state.thread_id)
@@ -157,10 +156,4 @@ if prompt:
 st.write(st.session_state.history)
 
 # streamlit run streamlit_app.py
-
-
-
-
-
-
 
