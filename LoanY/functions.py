@@ -136,16 +136,16 @@ def create_assistant(client):
     else:
     # If no assistant.json is present, create a new assistant using the below specifications
 
-        fha_file = client.files.create(file=open("/Users/cameronhightower/Documents/LoanY/docs/FHA_11_7_23.pdf", "rb"),
+        fha_file = client.files.create(file=open("/Users/cameronhightower/Documents/LoanY/docs/FHA_pamphlet.pdf", "rb"),
                                purpose='assistants')
         
-        va_file = client.files.create(file=open("/Users/cameronhightower/Documents/LoanY/docs/va_pamphlet.pdf", "rb"),
+        va_file = client.files.create(file=open("/Users/cameronhightower/Documents/LoanY/docs/VA_pamphlet.pdf", "rb"),
                                purpose='assistants')
 
         assistant = client.beta.assistants.create(
         # Getting assistant prompt from "prompts.py" file, edit on left panel if you want to change the prompt
         instructions=assistant_instructions,
-        model="gpt-4-1106-preview",
+        model= "gpt-3.5-turbo-1106",
         tools=[
             {
                 "type": "retrieval"  # This adds the knowledge base as a tool
