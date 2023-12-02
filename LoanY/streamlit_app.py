@@ -28,8 +28,8 @@ config = toml.load('/Users/cameronhightower/Documents/LoanY/.streamlit/config.to
 openai.api_key = config['openai']['api_key']
 OPENAI_API_KEY = openai.api_key
 
-llm_model = "gpt-3.5-turbo-1106"
-# llm_model = "gpt-4-1106-preview"
+# llm_model = "gpt-3.5-turbo-1106"
+llm_model = "gpt-4-1106-preview"
 
 # from dotenv import load_dotenv, find_dotenv
 # _ = load_dotenv(find_dotenv()) # read local .env file
